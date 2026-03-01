@@ -70,7 +70,7 @@ All form fields:
 The project is deployed and publicly accessible.
 
 Deployment platform: Netlify / Vercel / GitHub Pages  
-Live Link: YOUR_DEPLOYED_LINK
+
 
 ---
 
@@ -98,15 +98,150 @@ fiat-checkout/
 
 #  Architecture Explanation
 
-1. User fills checkout form.
-2. Client-side validation runs.
+This project follows a client-side modular web architecture using HTML, CSS, and JavaScript. It simulates a secure checkout flow with validation, API interaction, and dynamic success page rendering.
+
+The application is structured into three main layers:
+
+---
+
+Presentation Layer (UI)
+
+**Files:**
+
+* `index.html`
+* `success.html`
+* Embedded CSS
+
+Responsibility:
+
+* Renders checkout form
+* Displays validation errors
+* Shows loading states
+* Displays payment success details
+
+Key Features:
+
+* Responsive layout
+* Form validation feedback
+* Loading animation during API call
+* Dynamic order and date display on success page
+
+This layer does not handle business logic directly. It interacts with JavaScript for dynamic behavior.
+
+---
+
+ Business Logic Layer (Client-side JavaScript)
+
+**File:**
+
+* `script.js`
+
+Responsibility:
+
+* Form validation
+* Payment simulation
+* API communication
+* Order ID generation
+* Date generation
+* Redirect logic
+* URL parameter passing
+
+ Main Flow:
+
+1. User submits form
+2. `validateForm()` checks:
+
+   * Name format
+   * 16-digit card number
+   * Valid expiry date
+   * 3-digit CVV
 3. If valid:
-   - Loading state starts
-   - POST request sent to Beeceptor API
-4. Based on API response:
-   - Success → Redirect to success page
-   - Failure → Show error message
-5. Button remains disabled during request to prevent duplicate submissions.
+
+   * Show loading state
+   * Send POST request to mock API
+4. If API success:
+
+   * Generate dynamic Order ID
+   * Generate current date
+   * Redirect to success page with query parameters
+
+Example:
+
+```
+success.html?order=FIAT-4821&date=Feb%2027,%202026
+```
+
+---
+
+API Layer (Mock Backend)
+
+**Service Used:**
+
+* Beeceptor mock API endpoint
+
+### Responsibility:
+
+* Simulates server-side payment processing
+* Receives form data via POST request
+* Returns success response
+
+This mimics real-world backend integration without requiring a full server.
+
+---
+
+#  Data Flow Architecture
+
+User Input
+⬇
+Client-side Validation
+⬇
+Mock API Call (fetch POST)
+⬇
+Generate Order ID + Date
+⬇
+Redirect with URL Parameters
+⬇
+Success Page Reads Parameters
+⬇
+Display Dynamic Order Details
+
+---
+
+# Architectural Pattern Used
+
+This project loosely follows:
+
+* Separation of Concerns (UI / Logic / API)
+* Client-side MVC-style flow
+* Event-driven architecture (form submission events)
+* Asynchronous programming using async/await
+
+---
+
+# Security Considerations (Simulation Context)
+
+* Card data is validated but not stored
+* No sensitive data is persisted
+* API endpoint is mock only
+* Order ID generated client-side for demo purposes
+
+In a real-world application:
+
+* Payment processing would happen server-side
+* Sensitive data would never be handled in frontend
+* HTTPS and tokenization would be used
+
+---
+
+# Scalability Potential
+
+This architecture can be extended by:
+
+* Adding real backend (Node.js / Express)
+* Storing transactions in database
+* Implementing authentication
+* Adding state management
+* Converting to React or other SPA framework
 
 ---
 
